@@ -82,6 +82,8 @@ executable Taubleaux
     hs-source-dirs:   app, src
 
     other-modules: LogicExpressionValidator
+                , Taubleaux
+
 
     -- Base language which the package is written in.
     default-language: Haskell2010

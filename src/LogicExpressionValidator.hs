@@ -1,3 +1,4 @@
+{-
 module LogicExpressionValidator where
 
 import Text.Regex.TDFA ((=~))
@@ -18,3 +19,90 @@ loop = do
 -- Função main para executar o programa
 main :: IO ()
 main = loop
+-}
+
+module LogicExpressionValidator where
+
+import Data.List (elemIndex)
+import Data.Maybe (fromJust)
+import Data.List (isPrefixOf)
+
+
+-- Definição do tipo de dados para representar uma fórmula na Lógica Proposicional
+data Expression = Var String
+                | Not Expression
+                | And Expression Expression
+                | Or Expression Expression
+                | Imp Expression Expression
+                deriving (Show, Eq)
+
+-- Função para dividir a fórmula em três partes: left, mid (operador) e right
+splitFormula :: String -> (String, String, String)
+splitFormula formula =
+    let (left, midRight) = splitAtOperator formula
+        (mid, right) = extractOperator midRight
+    in (left, mid, right)
+
+-- Função para encontrar o operador de nível mais alto e dividir a string
+splitAtOperator :: String -> (String, String)
+splitAtOperator formula = go formula 0 ""
+  where
+    go [] _ acc = (acc, [])
+    go rest@(c:cs) depth acc
+        | isOperator rest && depth == 0 = (reverse acc, rest)
+        | c == '('  = go cs (depth + 1) (c:acc)
+        | c == ')'  = go cs (depth - 1) (c:acc)
+        | otherwise = go cs depth (c:acc)
+
+-- Função para verificar se uma string começa com um operador
+isOperator :: String -> Bool
+isOperator s = any (`isPrefixOf` s) ["<->", "->", "OU", "E"]
+
+-- Função para extrair o operador e o restante da string
+extractOperator :: String -> (String, String)
+extractOperator s
+    | "<->" `isPrefixOf` s = ("<->", drop 3 s)
+    | "->"  `isPrefixOf` s = ("->", drop 2 s)
+    | "OU"  `isPrefixOf` s = ("OU", drop 2 s)
+    | "E"   `isPrefixOf` s = ("E", drop 1 s)
+    | otherwise = ([], s)
+
+---  VER AS FUNÇÕES DAQUI PARA BAIXO !!!  ---
+
+-- Função para converter uma fórmula em uma expressão do tipo Expression
+parseFormula :: String -> Expression
+parseFormula formula =
+    let (left, mid, right) = splitFormula formula
+    in case mid of
+        "->"  -> Imp (parseFormula left) (parseFormula right)
+        "OU"  -> Or (parseFormula left) (parseFormula right)
+        "E"   -> And (parseFormula left) (parseFormula right)
+        _     -> parseSimpleExpression formula
+  where
+    -- Função auxiliar para converter uma fórmula simples em Expression
+    parseSimpleExpression :: String -> Expression
+    parseSimpleExpression f
+        | head f == '(' && last f == ')' = parseFormula $ init $ tail f
+        | head f == '~' = Not $ parseSimpleExpression $ tail f
+        | otherwise = Var f
+
+-- Função para verificar se um caractere é uma letra maiúscula ou minúscula
+isVariable :: Char -> Bool
+isVariable c = elem c ['a'..'z'] || elem c ['A'..'Z']
+
+-- Função para transformar uma string em uma lista de tokens
+tokenize :: String -> [String]
+tokenize [] = []
+tokenize (c:cs)
+    | c `elem` "()=>" = [c] : tokenize cs
+    | isVariable c = let (var, rest) = span isVariable (c:cs)
+                     in var : tokenize rest
+    | otherwise = tokenize cs
+
+-- Exemplo de uso:
+main :: IO ()
+main = do
+    putStrLn "Digite a fórmula na lógica proposicional:"
+    formula <- getLine
+    let expression = parseFormula formula
+    putStrLn $ "Expressão Haskell equivalente: " ++ show expression
