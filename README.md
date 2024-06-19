@@ -73,7 +73,14 @@ Baixe esse repositório e coloque no caminho que desejar. Em seguida, use o CMD 
 cd caminho/para/seu/projeto
 ```
 
-_O caminho irá variar dependendo de onde você colocou o diretório raiz do projeto._
+_O caminho irá variar dependendo de onde você colocou o diretório raiz do projeto._<br><br>
+
+OU<br><br>
+
+```bash
+git clone https://github.com/seu-usuario/taubleaux.git
+cd taubleaux
+```
 
 ### 3 - Atualize o índice de pacotes do Cabal
 ```bash
