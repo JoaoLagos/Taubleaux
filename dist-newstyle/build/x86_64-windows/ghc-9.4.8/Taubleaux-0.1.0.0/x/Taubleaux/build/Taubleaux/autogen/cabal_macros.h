@@ -30,6 +30,16 @@
   (major1) == 0 && (major2) <  6 || \
   (major1) == 0 && (major2) == 6 && (minor) <= 7)
 #endif /* MIN_VERSION_containers */
+/* package parsec-3.1.16.1 */
+#ifndef VERSION_parsec
+#define VERSION_parsec "3.1.16.1"
+#endif /* VERSION_parsec */
+#ifndef MIN_VERSION_parsec
+#define MIN_VERSION_parsec(major1,major2,minor) (\
+  (major1) <  3 || \
+  (major1) == 3 && (major2) <  1 || \
+  (major1) == 3 && (major2) == 1 && (minor) <= 16)
+#endif /* MIN_VERSION_parsec */
 /* package regex-tdfa-1.3.2.2 */
 #ifndef VERSION_regex_tdfa
 #define VERSION_regex_tdfa "1.3.2.2"
