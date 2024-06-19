@@ -28,8 +28,8 @@ createInitialNode expr = TableauNode expr False -- False, pois queremos provar a
 
 -- Expande nó através das REGRAS citadas
 expandNode :: TableauNode -> [[TableauNode]]
-expandNode (TableauNode (LEV.Imp a b) False) = [[TableauNode a True], [TableauNode b False]]
-expandNode (TableauNode (LEV.Imp a b) True)  = [[TableauNode a False, TableauNode b True]]
+expandNode (TableauNode (LEV.Imp a b) True) = [[TableauNode a True], [TableauNode b False]]
+expandNode (TableauNode (LEV.Imp a b) False)  = [[TableauNode a False, TableauNode b True]]
 expandNode (TableauNode (LEV.And a b) True)  = [[TableauNode a True, TableauNode b True]]
 expandNode (TableauNode (LEV.And a b) False) = [[TableauNode a False], [TableauNode b False]]
 expandNode (TableauNode (LEV.Or a b) True)   = [[TableauNode a True], [TableauNode b True]]
@@ -48,14 +48,16 @@ isSimpleNode _ = False
 expandTableau :: [TableauNode] -> IO [[TableauNode]]
 expandTableau [] = return []
 expandTableau (node:nodes)
-    | isSimpleNode node = do
+    |isSimpleNode node = do
         restBranches <- expandTableau nodes
-        return $ [node : branch | branch <- restBranches]
-    | otherwise = do
+        return $ if null restBranches
+                 then [[node]]
+                 else [node : branch | branch <- restBranches]
+    |otherwise = do
         let expandedNodes = expandNode node
         putStrLn $ "Expanding node: " ++ show node
         mapM_ (putStrLn . ("Generated nodes: " ++) . show) expandedNodes
-        expandedBranches <- mapM expandTableau (map (++ nodes) expandedNodes)
+        expandedBranches <- mapM expandTableau (map (++nodes)expandedNodes)
         return $ concat expandedBranches
 
 
@@ -65,12 +67,23 @@ expandInitialTableau expr = expandTableau [createInitialNode expr]
 
 ----------- ATÉ AQUI FOI !!! -------------
 
--- Função para verificar contradições em um ramo
-hasContradiction :: [TableauNode] -> Bool
-hasContradiction nodes = not . null $ intersect trueFormulas falseFormulas
-  where
-    trueFormulas = [f | TableauNode f True <- nodes]
-    falseFormulas = [f | TableauNode f False <- nodes]
+-- Função para verificar se há pelo menos um par com contradição em uma lista
+check :: [TableauNode] -> Bool
+check [] = False  -- Lista vazia não tem contradição
+check nodes = any hasContradictionPair [(x, y) | x <- nodes, y <- nodes, x /= y]
+    where
+        hasContradictionPair (x, y) = formula x == formula y && isTrue x /= isTrue y
+
+-- Função para verificar se há pelo menos uma lista com contradição em uma lista de listas
+hasContradiction :: [[TableauNode]] -> IO Bool
+hasContradiction [] = return False  -- Lista de listas vazia não tem contradição
+hasContradiction (x:xs) = do
+    if check x
+        then hasContradiction xs  -- Se há contradição, continuar verificando o restante da lista
+        else do
+            putStrLn $ "Contraexemplo: " ++ show x  -- Se não há contradição, imprimir o contraexemplo
+            return True  -- Retornar True indicando que encontrou contradição
+
 
 -- Representação da fórmula a → (a → (b → a))
 formula1 :: LEV.Expression
