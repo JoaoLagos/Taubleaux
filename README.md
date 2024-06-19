@@ -18,7 +18,7 @@ Bem-vindo ao repositório do projeto Taubleaux, uma implementação em Haskell d
 Certifique-se de ter o GHC (Glasgow Haskell Compiler) e o Cabal instalados em seu sistema. Em seguida, você pode clonar este repositório e instalar as dependências usando o Cabal:
 
 ```bash
-git clone https://github.com/seu-usuario/taubleaux.git
+git clone https://github.com/JoaoLagos/taubleaux.git
 cd taubleaux
 cabal build
 ```
@@ -78,7 +78,7 @@ _O caminho irá variar dependendo de onde você colocou o diretório raiz do pro
 OU<br><br>
 
 ```bash
-git clone https://github.com/seu-usuario/taubleaux.git
+git clone https://github.com/JoaoLagos/taubleaux.git
 cd taubleaux
 ```
 
