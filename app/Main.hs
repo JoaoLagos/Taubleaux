@@ -17,5 +17,7 @@ main = do
 
     -- Até o momento, responsável por mostrar os nós expandidos/gerados.
     finalBranches <- Taubleaux.expandInitialTableau expression
-    putStrLn "Final branches: "
-    mapM_ (putStrLn . show) finalBranches
+    result <- Taubleaux.hasContradiction finalBranches
+    if result
+        then putStrLn "Formula invalida"
+        else putStrLn "Formula valida"
