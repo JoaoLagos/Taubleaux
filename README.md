@@ -99,7 +99,7 @@ cabal run
 
 ## OBS:
 A entrada dos dados deve ser SEM ESPAÇOS e toda variável atômica deve ser englobada por (), bem como toda subfórmula esquerda e direita.<br>
-EXEMPLO: `(((a)E(b))->(b))OU((~c)->(d))`
+EXEMPLO: `(((a)E(b))->(b))OU((c)->(d))`
 
 <hr>
 
@@ -109,5 +109,8 @@ make run-example1.txt
 make run-example2.txt
 make run-example3.txt
 make run-example4.txt
+make run-example5.txt # Exemplo fornecido
+make run-example6.txt # Exemplo fornecido
+make run-example7.txt # Exemplo fornecido
 ```
 _Para isso, precisa-se instalar o make._

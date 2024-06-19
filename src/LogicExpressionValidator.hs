@@ -36,14 +36,14 @@ data Expression = Var String
                 | Imp Expression Expression
                 deriving (Show, Eq)
 
--- Função para dividir a fórmula em três partes: left, mid (operador) e right
+-- Divide a fórmula em três partes: left, mid (operador) e right
 splitFormula :: String -> (String, String, String)
 splitFormula formula =
     let (left, midRight) = splitAtOperator formula
-        (mid, right) = extractOperator midRight
+        (mid, right) = extractOperator midRight 
     in (left, mid, right)
 
--- Função para encontrar o operador de nível mais alto e dividir a string
+-- Encontra o operador de nível mais alto e dividi a string (esq e midRight)
 splitAtOperator :: String -> (String, String)
 splitAtOperator formula = go formula 0 ""
   where
@@ -54,11 +54,11 @@ splitAtOperator formula = go formula 0 ""
         | c == ')'  = go cs (depth - 1) (c:acc)
         | otherwise = go cs depth (c:acc)
 
--- Função para verificar se uma string começa com um operador
+-- Verifica se uma string começa com um operador
 isOperator :: String -> Bool
 isOperator s = any (`isPrefixOf` s) ["<->", "->", "OU", "E"]
 
--- Função para extrair o operador e o restante da string
+-- Extrai o operador e o restante da string (mid e right)
 extractOperator :: String -> (String, String)
 extractOperator s
     | "<->" `isPrefixOf` s = ("<->", drop 3 s)
@@ -67,9 +67,7 @@ extractOperator s
     | "E"   `isPrefixOf` s = ("E", drop 1 s)
     | otherwise = ([], s)
 
----  VER AS FUNÇÕES DAQUI PARA BAIXO !!!  ---
-
--- Função para converter uma fórmula em uma expressão do tipo Expression
+-- Converte uma fórmula em uma expressão do tipo Expression Haskell
 parseFormula :: String -> Expression
 parseFormula formula =
     let (left, mid, right) = splitFormula formula
@@ -78,8 +76,8 @@ parseFormula formula =
         "OU"  -> Or (parseFormula left) (parseFormula right)
         "E"   -> And (parseFormula left) (parseFormula right)
         _     -> parseSimpleExpression formula
-  where
-    -- Função auxiliar para converter uma fórmula simples em Expression
+  where 
+    -- Função auxiliar para converter uma fórmula simples em Expression Haskell
     parseSimpleExpression :: String -> Expression
     parseSimpleExpression f
         | head f == '(' && last f == ')' = parseFormula (init (tail f))

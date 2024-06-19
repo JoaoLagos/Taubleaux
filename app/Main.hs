@@ -19,5 +19,5 @@ main = do
     finalBranches <- Taubleaux.expandInitialTableau expression
     result <- Taubleaux.hasContradiction finalBranches
     if result
-        then putStrLn "Formula invalida"
-        else putStrLn "Formula valida"
+        then putStrLn "Formula válida"
+        else putStrLn "Formula inválida"
