@@ -48,4 +48,59 @@ O projeto está sendo desenvolvido utilizando as seguintes tecnologias:
 - **`Taubleaux.cabal`:** Arquivo de configuração do Cabal para o projeto.
 - **`README.md`:** Documentação do projeto com informações sobre os objetivos, funcionalidades, tecnologias utilizadas, entre outros.
 
+<hr>
 
+## Roteiro de Execução
+
+### 1 - Instalando o GHCup (vem o framework cabal junto)
+```bash
+Set-ExecutionPolicy Bypass -Scope Process -Force;[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; try { Invoke-Command -ScriptBlock ([ScriptBlock]::Create((Invoke-WebRequest https://www.haskell.org/ghcup/sh/bootstrap-haskell.ps1 -UseBasicParsing))) -ArgumentList $true } catch { Write-Error $_ }
+```
+
+Basta seguir as etapas de instalação no próprio CMD.
+
+#### 1.1. Verifique se o cabal foi corretamente instalado
+```bash
+cabal --version
+```
+
+Caso contrário, instale o mesmo com: `ghcup install cabal`. Depois verifique se foi instalado com o comando acima (`cabal --version`).
+
+### 2 - Baixe esse repositório e Entre no projeto
+Baixe esse repositório e coloque no caminho que desejar. Em seguida, use o CMD para entrar dentro desse diretório com o comando abaixo:
+
+```bash
+cd caminho/para/seu/projeto
+```
+
+_O caminho irá variar dependendo de onde você colocou o diretório raiz do projeto._
+
+### 3 - Atualize o índice de pacotes do Cabal
+```bash
+cabal update
+```
+
+### 5 - Compile o projeto
+```bash
+cabal build
+```
+
+### 6 - Execute o projeto
+```bash
+cabal run
+```
+
+## OBS:
+A entrada dos dados deve ser SEM ESPAÇOS e toda variável atômica deve ser englobada por (), bem como toda subfórmula esquerda e direita.<br>
+EXEMPLO: `(((a)E(b))->(b))OU((~c)->(d))`
+
+<hr>
+
+### Caso deseje rodar os arquivos de exemplo, basta fazer:
+```bash
+make run-example1.txt
+make run-example2.txt
+make run-example3.txt
+make run-example4.txt
+```
+_Para isso, precisa-se instalar o make._
