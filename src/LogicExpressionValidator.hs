@@ -82,22 +82,9 @@ parseFormula formula =
     -- Função auxiliar para converter uma fórmula simples em Expression
     parseSimpleExpression :: String -> Expression
     parseSimpleExpression f
-        | head f == '(' && last f == ')' = parseFormula $ init $ tail f
-        | head f == '~' = Not $ parseSimpleExpression $ tail f
+        | head f == '(' && last f == ')' = parseFormula (init (tail f))
+        | head f == '~' = Not (parseSimpleExpression (tail f))
         | otherwise = Var f
-
--- Função para verificar se um caractere é uma letra maiúscula ou minúscula
-isVariable :: Char -> Bool
-isVariable c = elem c ['a'..'z'] || elem c ['A'..'Z']
-
--- Função para transformar uma string em uma lista de tokens
-tokenize :: String -> [String]
-tokenize [] = []
-tokenize (c:cs)
-    | c `elem` "()=>" = [c] : tokenize cs
-    | isVariable c = let (var, rest) = span isVariable (c:cs)
-                     in var : tokenize rest
-    | otherwise = tokenize cs
 
 -- Exemplo de uso:
 main :: IO ()
